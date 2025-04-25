@@ -43,6 +43,9 @@ if st.button("💾 Simpan ke Excel"):
         wb = openpyxl.load_workbook(TEMP_EXCEL_FILE)
         ws = wb.active
 
+        ws['A1'] = "Gambar"
+        ws['B1'] = "Keterangan"
+
         # Hitung jumlah gambar yang sudah ada
         existing_images = len(ws._images)
         next_row = (existing_images * 1) + 2     
