@@ -6,10 +6,20 @@ import os
 IMAGE_FOLDER = 'uploaded_images'
 TEMP_EXCEL_FILE = 'temp_data_gambar.xlsx'
 
+# Buat folder gambar jika belum ada
 if not os.path.exists(IMAGE_FOLDER):
     os.makedirs(IMAGE_FOLDER)
 
-st.title("📸 Upload Gambar + KeterangaN")
+st.title("📸 Upload Gambar + Keterangan")
+
+# 🔴 Tambahkan Tombol Reset Data
+if st.button("🔄 Reset Data"):
+    if os.path.exists(TEMP_EXCEL_FILE):
+        os.remove(TEMP_EXCEL_FILE)
+    if os.path.exists(IMAGE_FOLDER):
+        for file in os.listdir(IMAGE_FOLDER):
+            os.remove(os.path.join(IMAGE_FOLDER, file))
+    st.success("Data lama berhasil dihapus! Mulai dari awal.")
 
 # Upload file Excel lama (opsional)
 uploaded_excel = st.file_uploader("Upload file Excel sebelumnya (optional)", type=["xlsx"])
@@ -35,7 +45,7 @@ if st.button("💾 Simpan ke Excel"):
 
         # Hitung jumlah gambar yang sudah ada
         existing_images = len(ws._images)
-        next_row = (len(ws._images) * 5) + 2     
+        next_row = (existing_images * 5) + 2     
 
         # Simpan gambar
         image_path = os.path.join(IMAGE_FOLDER, uploaded_file.name)
@@ -43,7 +53,17 @@ if st.button("💾 Simpan ke Excel"):
             f.write(uploaded_file.getbuffer())
 
         img = Image(image_path)
+
+        # ✅ Tetapkan ukuran gambar sedang (180x180 px)
+        img.width = 180
+        img.height = 180
+
+        # Sisipkan gambar di cell sesuai kelipatan 5
         ws.add_image(img, f'A{next_row}')
+
+        # Atur ukuran cell agar gambar rapi
+        ws.row_dimensions[next_row].height = 140
+        ws.column_dimensions['A'].width = 25
 
         # Tambahkan keterangan di kolom B
         ws[f'B{next_row}'] = description
