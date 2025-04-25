@@ -45,7 +45,7 @@ if st.button("💾 Simpan ke Excel"):
 
         # Hitung jumlah gambar yang sudah ada
         existing_images = len(ws._images)
-        next_row = (existing_images * 5) + 2     
+        next_row = (existing_images * 1) + 2     
 
         # Simpan gambar
         image_path = os.path.join(IMAGE_FOLDER, uploaded_file.name)
